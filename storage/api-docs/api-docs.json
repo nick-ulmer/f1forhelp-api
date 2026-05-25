@@ -1,0 +1,31 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "F1ForHelp API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/counter": {
+            "get": {
+                "summary": "Get current count",
+                "operationId": "7df4b9bf8f141af39de5d7ffb224680b",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/counter/increment": {
+            "post": {
+                "summary": "Increment the counter",
+                "operationId": "77095b75a73f87308bd72629ed98dbfa",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        }
+    }
+}
