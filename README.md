@@ -1,59 +1,117 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+> ⚠️ **AI-Assisted Project** — This project was built with the help of AI tooling and is actively in progress. Features, structure, and documentation may change frequently.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# f1forhelp-api
 
-## About Laravel
+Backend REST API for [f1forhelp.dev](https://f1forhelp.dev) — a personal portfolio site. Built with Laravel, hosted on Railway, and connected to a React + Vite frontend.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **PHP 8.2** + **Laravel 11**
+- **MySQL** (Railway-hosted)
+- **FrankenPHP** (production server via Railway)
+- **L5-Swagger** (OpenAPI documentation)
+- **Eloquent ORM**
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Live API
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Base URL:** `https://f1forhelp-api-production.up.railway.app`
 
-## Laravel Sponsors
+API documentation (Swagger UI): `/api/documentation`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## Endpoints
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Contact
 
-## Contributing
+| Method | Route | Description |
+|--------|-------|-------------|
+| POST | `/api/contact` | Submit a contact message |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**Request body:**
+```json
+{
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "message": "Hey, loved your portfolio!",
+  "website": ""
+}
+```
 
-## Code of Conduct
+> `website` is a honeypot field — leave empty. Bot submissions with this field populated are silently rejected.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**Responses:**
+- `201` — Message received
+- `422` — Validation error (field-level errors returned)
+- `429` — Rate limit exceeded (5 requests/min per IP)
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Counter
 
-## License
+| Method | Route | Description |
+|--------|-------|-------------|
+| GET | `/api/counter` | Get current count |
+| POST | `/api/counter/increment` | Increment the counter |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## Security
+
+- **Rate limiting** — public POST routes are throttled via Laravel's built-in `throttle` middleware
+- **Honeypot** — contact form includes a hidden `website` field to catch bots
+- **IP hashing** — visitor IPs are hashed with SHA-256 + a secret salt before storage, never stored raw
+- **SQL injection** — all queries use Eloquent ORM with parameterized statements
+- **CORS** — restricted to `https://f1forhelp.dev` in production
+
+---
+
+## Local Setup
+
+**Requirements:** PHP 8.2, Composer, MySQL
+
+```bash
+git clone https://github.com/nick-ulmer/f1forhelp-api
+cd f1forhelp-api
+composer install
+cp .env.example .env
+php artisan key:generate
+```
+
+Configure your `.env`:
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database
+DB_USERNAME=your_user
+DB_PASSWORD=your_password
+IP_SALT=your_random_salt
+```
+
+Then run migrations and start the server:
+```bash
+php artisan migrate
+php artisan serve
+```
+
+Swagger UI will be available at `http://localhost:8000/api/documentation`.
+
+---
+
+## Planned Features
+
+- Analytics / page view tracking
+- Game leaderboards
+- Project reactions
+- Devlog / changelog API
+
+---
+
+## Related
+
+- **Frontend:** [nick-ulmer.github.io](https://github.com/nick-ulmer/nick-ulmer.github.io) — React 19 + Vite portfolio site
