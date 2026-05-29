@@ -5,6 +5,63 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/contact": {
+            "post": {
+                "tags": [
+                    "Contact"
+                ],
+                "summary": "Submit a contact message",
+                "operationId": "4d33e9ce28a28bf1184927750df24ba8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "message"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Jane Doe",
+                                        "maxLength": 100
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "jane@example.com",
+                                        "maxLength": 150
+                                    },
+                                    "message": {
+                                        "type": "string",
+                                        "example": "Hey, loved your portfolio!",
+                                        "maxLength": 2000
+                                    },
+                                    "website": {
+                                        "description": "Honeypot - leave empty",
+                                        "type": "string",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Message received"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "429": {
+                        "description": "Too many requests"
+                    }
+                }
+            }
+        },
         "/api/counter": {
             "get": {
                 "summary": "Get current count",
@@ -27,5 +84,11 @@
                 }
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "name": "Contact",
+            "description": "Contact"
+        }
+    ]
 }
